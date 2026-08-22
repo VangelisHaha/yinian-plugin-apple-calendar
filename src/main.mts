@@ -39,7 +39,9 @@ start({
     // event 是 pull-only，宿主不会对它调 sync.push（契约 §5.1.1）
     "sync.pull": sync.pull,
     "config.validate": config.validate,
+    "appleCalendar.openAppleAccount": config.openAppleAccount,
     "appleCalendar.testConnection": config.testConnection,
+    "appleCalendar.testMirrorWrite": config.testMirrorWrite,
     "appleCalendar.listCalendars": config.listCalendarOptions,
   },
 });

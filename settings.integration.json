@@ -99,6 +99,20 @@
           "default": false,
           "visibleWhen": { "field": "mirrorEnabled", "equals": true },
           "help": "打开后任务的截止时间会作为全天事件写进镜像日历。排期回答「打算什么时候做」，截止回答「最晚什么时候完成」，多数人只需要前者。"
+        },
+        {
+          "key": "mirrorVerifyNote",
+          "type": "note",
+          "label": "先验证写入",
+          "text": "读得通不代表写得进去：`MKCALENDAR` 在部分 Apple 账号上会被拒（企业管理、家庭共享的受限成员）。下面这个按钮会走一遍**完整的写入路径**——建日历、写一条测试事件、再删掉，几秒钟出结论。\n\n被拒的话解决办法很简单：先在 Mac 或 iPhone 的日历 App 里手工建一个 iCloud 日历，再把上面的「镜像日历名称」改成它的名字。",
+          "visibleWhen": { "field": "mirrorEnabled", "equals": true }
+        },
+        {
+          "key": "testMirrorWrite",
+          "type": "action",
+          "label": "测试镜像写入",
+          "rpc": "appleCalendar.testMirrorWrite",
+          "visibleWhen": { "field": "mirrorEnabled", "equals": true }
         }
       ]
     }
