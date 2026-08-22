@@ -1,0 +1,50 @@
+{
+  "scope": "plugin",
+  "fields": [
+    {
+      "key": "intro",
+      "type": "note",
+      "label": "说明",
+      "text": "本插件通过 **iCloud CalDAV** 直连，不使用 macOS 的 EventKit——宿主拉起的子进程拿不到「日历」的系统授权。因此它只能看到 **iCloud 上的日历**，Mac 日历里存在「我的电脑 / On My Mac」下的本机日历同步不到。"
+    },
+    {
+      "key": "appleId",
+      "type": "string",
+      "label": "Apple 账号",
+      "required": true,
+      "placeholder": "you@icloud.com",
+      "maxLength": 128,
+      "help": "你的 Apple 账号邮箱。"
+    },
+    {
+      "key": "appPassword",
+      "type": "string",
+      "format": "secret",
+      "label": "App 专用密码",
+      "required": true,
+      "help": "**不是** Apple 账号本身的密码。到 account.apple.com 生成一个 16 位 App 专用密码（要求账号已开双重认证）。改过 Apple 账号主密码后所有 App 专用密码会被吊销，需要重新生成一个填回来。"
+    },
+    {
+      "key": "credentialNote",
+      "type": "note",
+      "label": "关于这份凭据",
+      "text": "App 专用密码是**长期有效的完整日历读写凭据**，而一念一期的插件是没有沙箱的普通用户态进程。填进来等于把 iCloud 日历的读写权限交给本插件进程。不接受这一点就不要启用它。"
+    },
+    {
+      "key": "httpTimeoutSeconds",
+      "type": "integer",
+      "label": "请求超时",
+      "default": 20,
+      "min": 5,
+      "max": 60,
+      "unit": "seconds",
+      "help": "单次 CalDAV 请求的超时。iCloud 偶尔很慢，网络差可以调大。"
+    },
+    {
+      "key": "testConnection",
+      "type": "action",
+      "label": "测试连接",
+      "rpc": "appleCalendar.testConnection"
+    }
+  ]
+}

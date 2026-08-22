@@ -1,0 +1,106 @@
+{
+  "scope": "integration",
+  "fields": [
+    {
+      "key": "calendars",
+      "type": "multi-enum",
+      "label": "同步哪些日历",
+      "optionsFrom": "rpc:appleCalendar.listCalendars",
+      "help": "留空表示同步全部。同步进来的日历在一念这侧是**只读**的（契约 §5.1.1：外部日历远端权威），要在一念里改就手工建一个事件。"
+    },
+    {
+      "key": "windowGroup",
+      "type": "group",
+      "label": "时间范围",
+      "fields": [
+        {
+          "key": "windowNote",
+          "type": "note",
+          "label": "为什么要限范围",
+          "text": "iCloud 上可能存着十几年的日历。全量拉一次要几分钟，而且没人会在一念里翻 2013 年的会议。这里限定的是**每次同步覆盖的日期窗口**，窗口外的事件不会进一念。"
+        },
+        {
+          "key": "pastDays",
+          "type": "integer",
+          "label": "往前拉几天",
+          "default": 30,
+          "min": 0,
+          "max": 730
+        },
+        {
+          "key": "futureDays",
+          "type": "integer",
+          "label": "往后拉几天",
+          "default": 180,
+          "min": 1,
+          "max": 730
+        }
+      ]
+    },
+    {
+      "key": "busyStatusOverride",
+      "type": "enum",
+      "label": "忙闲状态",
+      "default": "source",
+      "options": [
+        { "value": "source", "label": "跟随 Apple 日历" },
+        { "value": "free", "label": "一律标为空闲" }
+      ],
+      "help": "订阅类日历（节假日、球赛赛程）在 Apple 侧常常是「忙」，同步进来会把一整天标满。这类实例选「一律标为空闲」。"
+    },
+    {
+      "key": "mirrorGroup",
+      "type": "group",
+      "label": "把一念的排期镜像回 Apple 日历",
+      "fields": [
+        {
+          "key": "mirrorNote",
+          "type": "note",
+          "label": "这是单向镜像",
+          "text": "打开后，一念里的**排期块**（打算什么时候做）会被写进一个专用的 Apple 日历，于是你在 iPhone 日历上就能看到今天要做什么。方向是**一念 → Apple**：在 Apple 侧改动这个日历里的事件，下一轮同步会被覆盖回去。原因是同步来的排期权威在原系统（比如飞书项目）那一侧，一念自己都不改它。"
+        },
+        {
+          "key": "mirrorEnabled",
+          "type": "boolean",
+          "label": "启用排期镜像",
+          "default": false
+        },
+        {
+          "key": "mirrorCalendarName",
+          "type": "string",
+          "label": "镜像日历名称",
+          "default": "一念 · 排期",
+          "maxLength": 64,
+          "visibleWhen": { "field": "mirrorEnabled", "equals": true },
+          "help": "不存在时插件会在 iCloud 上新建这个日历。**不要指向一个你自己在用的日历**：插件会删除该日历里所有由它写入的事件。"
+        },
+        {
+          "key": "mirrorPastDays",
+          "type": "integer",
+          "label": "镜像往前几天",
+          "default": 7,
+          "min": 0,
+          "max": 90,
+          "visibleWhen": { "field": "mirrorEnabled", "equals": true }
+        },
+        {
+          "key": "mirrorFutureDays",
+          "type": "integer",
+          "label": "镜像往后几天",
+          "default": 60,
+          "min": 1,
+          "max": 365,
+          "visibleWhen": { "field": "mirrorEnabled", "equals": true }
+        },
+        {
+          "key": "mirrorIncludeDeadlines",
+          "type": "boolean",
+          "label": "同时镜像截止时间",
+          "default": false,
+          "visibleWhen": { "field": "mirrorEnabled", "equals": true },
+          "help": "打开后任务的截止时间会作为全天事件写进镜像日历。排期回答「打算什么时候做」，截止回答「最晚什么时候完成」，多数人只需要前者。"
+        }
+      ]
+    }
+  ]
+}
