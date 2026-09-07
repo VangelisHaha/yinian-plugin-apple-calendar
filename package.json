@@ -1,6 +1,6 @@
 {
   "name": "yinian-plugin-apple-calendar",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "一念（Yinian）的 Apple 日历插件：iCloud CalDAV 拉取 + 排期块单向镜像，零运行时依赖",
   "type": "module",
   "private": true,

@@ -2,11 +2,11 @@
   "manifestVersion": 1,
   "id": "yinian-apple-calendar",
   "name": "Apple 日历",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "author": "vangelis",
   "description": "通过 iCloud CalDAV 把 Apple 日历同步进一念，并可把一念的排期块单向镜像成一个 Apple 日历（在 iPhone / Mac 日历上直接看到）",
   "homepage": "https://github.com/VangelisHaha/yinian-plugin-apple-calendar",
-  "minHostVersion": "0.7.0",
+  "minHostVersion": "0.13.0",
   "runtime": {
     "kind": "process",
     "node": ">=20",
@@ -15,26 +15,47 @@
     }
   },
   "permissions": {
-    "net": ["caldav.icloud.com", "*.icloud.com"],
+    "net": [
+      "caldav.icloud.com",
+      "*.icloud.com"
+    ],
     "spawn": [],
     "fs": [],
-    "api": ["agenda:read", "calendar:read"]
+    "api": [
+      "agenda:read",
+      "calendar:read"
+    ]
   },
   "contributes": {
     "sync": {
-      "resources": ["event"],
+      "resources": [
+        "event"
+      ],
       "capabilities": {
-        "actions": ["list"],
+        "actions": [
+          "list"
+        ],
         "fields": []
       }
     },
     "syncStrategy": {
-      "modes": ["interval", "manual"],
+      "modes": [
+        "interval",
+        "manual"
+      ],
       "defaultIntervalSeconds": 900,
       "minIntervalSeconds": 300
     },
     "hooks": [],
-    "settingsPanel": ["settings.plugin.json", "settings.integration.json"]
+    "settingsPanel": [
+      "settings.plugin.json",
+      "settings.integration.json"
+    ],
+    "agentTools": {
+      "scope": "integration"
+    }
   },
-  "authMode": ["appSpecificPassword"]
+  "authMode": [
+    "appSpecificPassword"
+  ]
 }

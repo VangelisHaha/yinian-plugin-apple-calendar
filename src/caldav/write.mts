@@ -14,6 +14,7 @@ export interface IcsEventInput {
   uid: string;
   summary: string;
   description?: string;
+  location?: string;
   /** `true` 时用 `startDate` / `endDate`（右开）。 */
   allDay: boolean;
   startAt?: string;
@@ -60,6 +61,7 @@ export function buildCalendar(event: IcsEventInput): string {
   if (event.description) {
     lines.push(`DESCRIPTION:${escapeText(event.description)}`);
   }
+  if (event.location) lines.push(`LOCATION:${escapeText(event.location)}`);
   if (event.transparent) lines.push("TRANSP:TRANSPARENT");
 
   lines.push("END:VEVENT", "END:VCALENDAR");

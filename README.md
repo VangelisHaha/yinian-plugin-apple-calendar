@@ -157,3 +157,13 @@ node scripts/probe.mjs --write
 - 插件契约：一念仓库的 `docs/11-plugin-architecture.md`（**source of truth**）
 - Event 与外部日历同步语义：`docs/07-event-calendar-design.md` §13
 - 排期块与 Deadline 的分层建模：`docs/07-event-calendar-design.md`
+
+## 一念 AI 工具（需要宿主 0.13.0）
+
+插件启用并配置有效后，一念 AI 面板自动发现 `contributes.agentTools`。可在 Agent 设置中单独
+关闭 AI 使用，不影响同步。查询直接执行，创建先显示目标及参数，由用户在面板确认一次。
+失败保留本地事项，重试复用原操作，不能通过设置动作或外部 CLI 绕过确认。
+
+工具实现见 `src/handlers/tools.mts`，公共 SDK 来自官方模板 `src/sdk/tools.mts`；自定义工具
+请参考 [模板中文教程](https://github.com/VangelisHaha/yinian-plugin-template#ai-工具自定义插件接入指南)。
+本插件的自动测试使用模拟响应，不创建真实第三方事项。

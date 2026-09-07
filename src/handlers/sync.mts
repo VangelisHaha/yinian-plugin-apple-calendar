@@ -1,3 +1,4 @@
+import { discoverAccount } from "../caldav/account.mjs";
 /**
  * `sync.pull`：把 iCloud 日历拉进一念。
  *
@@ -18,15 +19,12 @@
 import { context, logger, setState } from "../sdk/index.mjs";
 import {
   calendarQuery,
-  discoverCalendarHome,
-  discoverPrincipal,
-  listCalendars,
   syncCollection,
   type DavCalendar,
   type DavContext,
 } from "../caldav/collection.mjs";
 import { parseEvents } from "../caldav/ics.mjs";
-import { readConfig, type Config } from "../config.mjs";
+import { type Config } from "../config.mjs";
 import { mirrorSchedules } from "../mirror/sync.mjs";
 import {
   toExternalCalendar,
@@ -75,19 +73,9 @@ export async function pull(request: PullRequest): Promise<PullPage> {
   // 每次调用重新取上下文：进程会被重启并重放 plugin.init，
   // 缓存下来的是上一轮的配置（SDK 文档明确警告过）
   const ctx = context();
-  const config = readConfig(request.config ?? ctx.config);
-  const dav: DavContext = {
-    credentials: {
-      appleId: config.appleId,
-      appPassword: config.appPassword,
-    },
-    timeoutSeconds: config.timeoutSeconds,
-  };
-
-  // 发现链只走一次：镜像也要用 home 与全量日历列表，重复发现是三次多余的往返
-  const principal = await discoverPrincipal(dav);
-  const homeUrl = await discoverCalendarHome(dav, principal);
-  const allCalendars = await listCalendars(dav, homeUrl);
+  const { config, dav, homeUrl, allCalendars } = await discoverAccount(
+    request.config ?? ctx.config,
+  );
   const calendars = selectCalendars(allCalendars, config);
 
   if (calendars.length === 0) {
@@ -269,7 +257,9 @@ function readState(ctx: { state?: Record<string, unknown> }): SyncState {
   const stored = ctx.state;
   if (!stored || typeof stored !== "object") return {};
   const state: SyncState = {};
-  for (const [url, value] of Object.entries(stored as Record<string, unknown>)) {
+  for (const [url, value] of Object.entries(
+    stored as Record<string, unknown>,
+  )) {
     if (!value || typeof value !== "object") continue;
     const token = (value as { syncToken?: unknown }).syncToken;
     if (typeof token !== "string") continue;
@@ -277,7 +267,7 @@ function readState(ctx: { state?: Record<string, unknown> }): SyncState {
       syncToken: token,
       syncedAt:
         typeof (value as { syncedAt?: unknown }).syncedAt === "string"
-          ? ((value as { syncedAt: string }).syncedAt)
+          ? (value as { syncedAt: string }).syncedAt
           : "",
     };
   }

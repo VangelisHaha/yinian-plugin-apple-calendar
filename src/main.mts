@@ -1,3 +1,4 @@
+import { handlers as agentTools } from "./handlers/tools.mjs";
 /**
  * Apple 日历插件入口。
  *
@@ -36,6 +37,7 @@ start({
     logger.debug(config.describeContext(ctx));
   },
   handlers: {
+    ...agentTools,
     // event 是 pull-only，宿主不会对它调 sync.push（契约 §5.1.1）
     "sync.pull": sync.pull,
     "config.validate": config.validate,
